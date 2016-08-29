@@ -1,0 +1,33 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/And16pt2.hdl
+
+/**
+ * 16-bit bitwise And:
+ * for i = 0..15: out[i] = (a[i] and b[i])
+ */
+
+CHIP And16pt2 {
+    IN a[16];
+    OUT out;
+
+    PARTS:
+    And (a=a[0], b=true, out=tempOut0);
+    And (a=a[1], b=tempOut0, out=tempOut1);
+    And (a=a[2], b=tempOut1, out=tempOut2);
+    And (a=a[3], b=tempOut2, out=tempOut3);
+    And (a=a[4], b=tempOut3, out=tempOut4);
+    And (a=a[5], b=tempOut4, out=tempOut5);
+    And (a=a[6], b=tempOut5, out=tempOut6);
+    And (a=a[7], b=tempOut6, out=tempOut7);
+    And (a=a[8], b=tempOut7, out=tempOut8);
+    And (a=a[9], b=tempOut8, out=tempOut9);
+    And (a=a[10], b=tempOut9, out=tempOut10);
+    And (a=a[11], b=tempOut10, out=tempOut11);
+    And (a=a[12], b=tempOut11, out=tempOut12);
+    And (a=a[13], b=tempOut12, out=tempOut13);
+    And (a=a[14], b=tempOut13, out=tempOut14);
+    And (a=a[15], b=tempOut14, out=out);
+    
+}

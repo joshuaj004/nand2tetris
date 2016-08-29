@@ -1,0 +1,19 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/LessChecker.hdl
+
+/**
+ * Checks if a 16 bit bus is less than 0.
+ * Returns 1 if true, 0 if false.
+ */
+
+CHIP LessChecker {
+    IN a[16];
+    OUT out;
+
+    PARTS:
+    And (a=a[15], b=true, out=out);
+    //Nand (a=a[0], b=true, out=temp);
+    //Not (in=temp, out=out);
+}

@@ -1,0 +1,32 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/02/HalfAdder16.hdl
+
+/**
+ * Adds a 16-bit value with all 0s or 1s.
+ * Ignores carrys.
+ */
+
+CHIP HalfAdder16 {
+    IN a[16], b;
+    OUT out[16];
+
+    PARTS:
+    HalfAdder (a=a[0], b=b, sum=out[0], carry=carry0);
+    HalfAdder (a=a[1], b=b, sum=out[1], carry=carry1);
+    HalfAdder (a=a[2], b=b, sum=out[2], carry=carry2);
+    HalfAdder (a=a[3], b=b, sum=out[3], carry=carry3);
+    HalfAdder (a=a[4], b=b, sum=out[4], carry=carry4);
+    HalfAdder (a=a[5], b=b, sum=out[5], carry=carry5);
+    HalfAdder (a=a[6], b=b, sum=out[6], carry=carry6);
+    HalfAdder (a=a[7], b=b, sum=out[7], carry=carry7);
+    HalfAdder (a=a[8], b=b, sum=out[8], carry=carry8);
+    HalfAdder (a=a[9], b=b, sum=out[9], carry=carry9);
+    HalfAdder (a=a[10], b=b, sum=out[10], carry=carry10);
+    HalfAdder (a=a[11], b=b, sum=out[11], carry=carry11);
+    HalfAdder (a=a[12], b=b, sum=out[12], carry=carry12);
+    HalfAdder (a=a[13], b=b, sum=out[13], carry=carry13);
+    HalfAdder (a=a[14], b=b, sum=out[14], carry=carry14);
+    HalfAdder (a=a[15], b=b, sum=out[15], carry=carry15);
+}

@@ -1,0 +1,95 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/CPU.hdl
+
+/**
+ * The Hack CPU (Central Processing unit), consisting of an ALU,
+ * two registers named A and D, and a program counter named PC.
+ * The CPU is designed to fetch and execute instructions written in 
+ * the Hack machine language. In particular, functions as follows:
+ * Executes the inputted instruction according to the Hack machine 
+ * language specification. The D and A in the language specification
+ * refer to CPU-resident registers, while M refers to the external
+ * memory location addressed by A, i.e. to Memory[A]. The inM input 
+ * holds the value of this location. If the current instruction needs 
+ * to write a value to M, the value is placed in outM, the address 
+ * of the target location is placed in the addressM output, and the 
+ * writeM control bit is asserted. (When writeM==0, any value may 
+ * appear in outM). The outM and writeM outputs are combinational: 
+ * they are affected instantaneously by the execution of the current 
+ * instruction. The addressM and pc outputs are clocked: although they 
+ * are affected by the execution of the current instruction, they commit 
+ * to their new values only in the next time step. If reset==1 then the 
+ * CPU jumps to address 0 (i.e. pc is set to 0 in next time step) rather 
+ * than to the address resulting from executing the current instruction. 
+ */
+
+CHIP CPU {
+    // Firp Ding Blast ITS BACKWARDS>>>>>>>.........
+    // 1  1  1  a  c1 c2 c3 c4 c5 c6 d1 d2 d3 j1 j2 j3
+    // 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+    // instruction[15] specifies whether it's an A or C 
+    Not(in=instruction[15], out=notOp);
+    // We could just as easily use instruction[15] as sel, but we'd have to reverse a and b
+    Mux16(a=ALUOutput, b=instruction, sel=notOp, out=Mux1Out);
+    // instruction[5] says whether or not to store into the A register
+    Or(a=notOp, b=instruction[5], out=intoA);
+    // See above comment
+    ARegister (in=Mux1Out, load=intoA, out=ARegisterOut, out[0..14]=addressM);
+    // This tells us whether or not we're operating on the A register or the M register
+    And(a=instruction[15], b=instruction[12], out=AMSwitch);
+    // Either accepts the contents or the A register or in M
+    Mux16 (a=ARegisterOut, b=inM, sel=AMSwitch, out=Mux2Out);
+    // Specifies whether or not we're storing in the D register
+    And (a=instruction[4], b=instruction[15], out=inst4And15);
+    // See above comment
+    DRegister (in=ALUOutput, load=inst4And15, out=DRegisterOut);
+    // ALU operations, pretty straight forward
+    ALU(x=DRegisterOut, y=Mux2Out, zx=instruction[11], nx=instruction[10], 
+        zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], 
+        out=ALUOutput, out=outM, zr=zr, ng=ng); 
+    // Specifies whether or not to write to M
+    And (a=instruction[3], b=instruction[15], out=writeM);
+    
+    // Reset == Reset for obvious reasons
+    // Check if we're going to jump or not
+    // If all are 0, then we increment by 1 because there's no jump
+    Or (a=instruction[13], b=instruction[14], out=inst13Or14);
+    Or (a=inst13Or14, b=instruction[15], out=inst13Or14Or15);
+    Not (in=inst13Or14Or15, out=incInstruction);
+    // Load is if the jump evaluates to true, either by 111 or by evaluating the statement
+    // USE THE ALU OUTPUT BITS TO FIGURE THIS OUT, YO
+    Not(in=ng, out=Notng);
+    Not(in=zr, out=Notzr);
+    
+    
+    And(a=instruction[15], b=instruction[0], out=jgt);
+    And(a=Notng, b=Notzr, out=positiveandNotzero);
+    And(a=jgt, b=positiveandNotzero, out=ld1);
+
+    And(a=instruction[15], b=instruction[1], out=jeq);
+    And(a=jeq, b=zr, out=ld2);
+
+    And(a=instruction[15], b=instruction[2], out=jlt);
+    And(a=jlt, b=ng, out=ld3);
+
+    // If any of the ldX's are 1, we jump
+    Or(a=ld1, b=ld2, out=ldt);
+    Or(a=ld3, b=ldt, out=ld);
+    
+    PC (in=ARegisterOut, load=ld, inc=true, reset=reset, out[0..14]=pc); 
+    
+}

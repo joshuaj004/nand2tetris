@@ -1,0 +1,34 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/ZeroChecker.hdl
+
+/**
+ * Checks if a 16bit bus is all zeros and retunrs 1 if it is.
+ * Else 0
+ */
+
+CHIP ZeroChecker {
+    IN a[16];
+    OUT out;
+
+    PARTS:
+    Or (a=a[0], b=false, out=tempOut0);
+    Or (a=a[1], b=tempOut0, out=tempOut1);
+    Or (a=a[2], b=tempOut1, out=tempOut2);
+    Or (a=a[3], b=tempOut2, out=tempOut3);
+    Or (a=a[4], b=tempOut3, out=tempOut4);
+    Or (a=a[5], b=tempOut4, out=tempOut5);
+    Or (a=a[6], b=tempOut5, out=tempOut6);
+    Or (a=a[7], b=tempOut6, out=tempOut7);
+    Or (a=a[8], b=tempOut7, out=tempOut8);
+    Or (a=a[9], b=tempOut8, out=tempOut9);
+    Or (a=a[10], b=tempOut9, out=tempOut10);
+    Or (a=a[11], b=tempOut10, out=tempOut11);
+    Or (a=a[12], b=tempOut11, out=tempOut12);
+    Or (a=a[13], b=tempOut12, out=tempOut13);
+    Or (a=a[14], b=tempOut13, out=tempOut14);
+    Or (a=a[15], b=tempOut14, out=tempOut15);
+    Not (in=tempOut15, out=out);
+    
+}

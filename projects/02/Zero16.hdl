@@ -1,0 +1,33 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/02/Zero16.hdl
+
+/**
+ * Zeros a 16 bit value.
+ * 
+ */
+
+CHIP Zero16 {
+    IN a[16], b;
+    OUT out[16];
+
+    PARTS:
+    Not (in=b, out=Notb);
+    And (a=a[0], b=Notb, out=out[0]);
+    And (a=a[1], b=Notb, out=out[1]);
+    And (a=a[2], b=Notb, out=out[2]);
+    And (a=a[3], b=Notb, out=out[3]);
+    And (a=a[4], b=Notb, out=out[4]);
+    And (a=a[5], b=Notb, out=out[5]);
+    And (a=a[6], b=Notb, out=out[6]);
+    And (a=a[7], b=Notb, out=out[7]);
+    And (a=a[8], b=Notb, out=out[8]);
+    And (a=a[9], b=Notb, out=out[9]);
+    And (a=a[10], b=Notb, out=out[10]);
+    And (a=a[11], b=Notb, out=out[11]);
+    And (a=a[12], b=Notb, out=out[12]);
+    And (a=a[13], b=Notb, out=out[13]);
+    And (a=a[14], b=Notb, out=out[14]);
+    And (a=a[15], b=Notb, out=out[15]);
+}

@@ -1,0 +1,53 @@
+Notes for an assembler
+It should be able to:
+    Read a file with a given text name
+    Move to the next commant in the file
+        are we finished? boolean hasMoreCommands();
+        get the next command. void advance();
+        Need to read one line at a time
+        Need to skip whitespace including comments
+    Get the fields of the current command
+        A-Command/C-Command/Label
+        Easy access to the fields:
+            D=M+1;JGT
+            D   -> String dest();
+            M+1 -> String comp();
+            JGT -> String jump();
+            
+            @sum
+            sum -> String label();
+    Translate menmonic to code 
+        Don't need to know how the fields were obtained
+    Symbol Table *Do this with a map
+        Create a new empty table
+        Add a (symbol, address) pair to the table
+        Does the table contain a symbol
+        What is the address associated with the given symbol
+        
+        Create a new empty table
+        Add all the pre-defined symbols to the table
+        While reading the input, add labels and new variables to the table
+        Whenever you see a "@xxx" command, where xxx is not a number, consult the table to 
+            replace the symbol xxx with its address
+        
+        Labels:
+            When you see a (xxx) command, at "xxx" and the address of the next machine
+                language command
+            This requires maintaining this running address
+            May need to be done in a first pass
+        Variables:
+            When you see an "@xxx" command, where "xxx" is not a number and not already in the 
+                table, add "xxx" and the next free address (start @ 16)for variable allocation
+        
+    Overall:
+        Initialize the parser and the symbol table
+        Read all commands, only paying attention to labels and updating the symbol table
+        Restart reading and translating commands
+        Main loop:
+            Get the next Assembly Language Command and parse its
+            For A-Commands: Translate symbols to binary addressess
+            For C-Commands: Get code for each part and put them together
+            Output the resulting machine language command
+        
+    Takes in xxx.asm and outputs to xxx.hack
+        Assumes xxx.asm is error free
